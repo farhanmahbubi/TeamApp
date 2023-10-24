@@ -5,6 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.parsingjson.model.DataItem
+import com.dicoding.parsingjson.model.ResponseUser
+import com.dicoding.parsingjson.network.ApiConfig
+import com.example.teamapp.databinding.FragmentHomeBinding
+import retrofit2.Call
+import retrofit2.Response
+import javax.security.auth.callback.Callback
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +30,9 @@ class Home : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var _binding : FragmentHomeBinding? = null
+    private lateinit var adapter: UserAdapter
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +46,39 @@ class Home : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+
+        val recyclerView = binding.recycleView
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        adapter = UserAdapter(mutableListOf())
+
+        recyclerView.adapter = adapter
+
+        getUser()
+
+        return root
+    }
+
+    private fun getUser() {
+        val client = ApiConfig.getApiService().getListUsers("1")
+
+        client.enqueue(object : retrofit2.Callback<ResponseUser> {
+            override fun onResponse(call: Call<ResponseUser>, response: Response<ResponseUser>) {
+                if (response.isSuccessful) {
+                    val dataArray = response.body()?.data as List<DataItem>
+                    for (data in dataArray) {
+                        adapter.addUser(data)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseUser>, t: Throwable) {
+                Toast.makeText(activity, t.message, Toast.LENGTH_SHORT).show()
+                t.printStackTrace()
+            }
+        })
     }
 
     companion object {
