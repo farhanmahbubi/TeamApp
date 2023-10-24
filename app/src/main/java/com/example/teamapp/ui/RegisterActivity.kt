@@ -61,7 +61,7 @@ class RegisterActivity : ComponentActivity() {
 
     private fun txtLoginListener() {
         binding.txtLoginsekarang.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
     }
