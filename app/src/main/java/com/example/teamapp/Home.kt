@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,6 +56,20 @@ class Home : Fragment() {
         adapter = UserAdapter(mutableListOf())
 
         recyclerView.adapter = adapter
+
+        val searchView = binding.searchView
+
+        // Atur listener pencarian
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filterUsers(newText.orEmpty())
+                return true
+            }
+        })
 
         getUser()
 
