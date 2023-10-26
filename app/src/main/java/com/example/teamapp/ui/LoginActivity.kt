@@ -35,7 +35,9 @@ class LoginActivity : ComponentActivity() {
                     val user = userDao.checkUserPass(appUsername, password)
 
                     if (user.isNotEmpty()) {
-                        // Login berhasil
+                        // Login berhasil, simpan status login
+                        saveLoginStatus()
+
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@LoginActivity, "Login Berhasil", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this@LoginActivity, MainActivity::class.java)
@@ -55,9 +57,17 @@ class LoginActivity : ComponentActivity() {
         txtDaftarListener()
     }
 
-    private fun txtDaftarListener(){
-        binding.txtDaftardulu.setOnClickListener{ // Gunakan objek binding
+    private fun txtDaftarListener() {
+        binding.txtDaftardulu.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
+    }
+
+    // Fungsi untuk menyimpan status login
+    private fun saveLoginStatus() {
+        val sharedPreferences = getSharedPreferences("login_status", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("is_logged_in", true)
+        editor.apply()
     }
 }
