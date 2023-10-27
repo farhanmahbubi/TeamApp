@@ -10,26 +10,21 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.teamapp.databinding.FragmentProfileBinding
+import com.example.teamapp.databinding.LoginActivityBinding
 import com.example.teamapp.ui.LoginActivity
 
 class Profile : Fragment() {
-    private lateinit var titleTextView: TextView
-    private lateinit var usernameTextView: TextView
-    private lateinit var emailTextView: TextView
-    private lateinit var logoutButton: Button
+    private lateinit var binding: FragmentProfileBinding
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_profile, container, false)
-
-        // Inisialisasi tampilan
-        titleTextView = view.findViewById(R.id.title)
-        usernameTextView = view.findViewById(R.id.usernameTextView)
-        emailTextView = view.findViewById(R.id.emailTextView)
-        logoutButton = view.findViewById(R.id.logoutButton)
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        val root: View = binding.root
 
         // Mendapatkan SharedPreferences
         sharedPreferences = requireActivity().getSharedPreferences("user_data", AppCompatActivity.MODE_PRIVATE)
@@ -43,15 +38,15 @@ class Profile : Fragment() {
             val email = sharedPreferences.getString("email", "")
 
             val firstChar = username?.take(1)
-            titleTextView.text = firstChar
+            binding.title.text = firstChar
 
             // Menampilkan informasi pengguna
-            usernameTextView.text = username
-            emailTextView.text = email
+            binding.usernameTextView.text = username
+            binding.emailTextView.text = email
         }
 
         // Mengatur listener untuk tombol logout
-        logoutButton.setOnClickListener {
+        binding.logoutButton.setOnClickListener {
             // Menghapus status login dari SharedPreferences
             val editor = sharedPreferences.edit()
             editor.putBoolean("is_logged_in", false)
@@ -62,7 +57,6 @@ class Profile : Fragment() {
             startActivity(intent)
             requireActivity().finish() // Menutup aktivitas saat logout
         }
-
-        return view
+        return root
     }
 }
