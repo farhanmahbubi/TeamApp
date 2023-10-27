@@ -60,7 +60,8 @@ class Home : Fragment() {
         val searchView = binding.searchView
 
         // Atur listener pencarian
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
@@ -75,6 +76,7 @@ class Home : Fragment() {
 
         return root
     }
+
 
     private fun getUser() {
         val client = ApiConfig.getApiService().getListUsers("1")
