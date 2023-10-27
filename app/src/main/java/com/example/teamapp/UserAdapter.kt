@@ -16,6 +16,7 @@ class UserAdapter(private val users: MutableList<DataItem>) :
     RecyclerView.Adapter<UserAdapter.ListViewHolder>() {
 
     private val filteredUsers: MutableList<DataItem> = mutableListOf()
+    private var isFilterEmpty: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val view: View =
@@ -36,16 +37,24 @@ class UserAdapter(private val users: MutableList<DataItem>) :
     override fun getItemCount(): Int = if (filteredUsers.isNotEmpty()) filteredUsers.size else users.size
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        val user = if (filteredUsers.isNotEmpty()) filteredUsers[position] else users[position]
+        if (isFilterEmpty) {
+            // Tampilkan pesan jika hasil filter kosong
+            holder.tvUserName.text = ""
+            holder.tvEmail.text = ""
+            holder.ivAvatar.setImageResource(R.color.white)
+        } else {
+            // Tampilkan data user jika hasil filter tidak kosong
+            val user = if (filteredUsers.isNotEmpty()) filteredUsers[position] else users[position]
 
-        Glide.with(holder.itemView.context)
-            .load(user.avatar)
-            .apply(RequestOptions().override(80, 80).placeholder(R.drawable.icon_launcher))
-            .transform(CircleCrop())
-            .into(holder.ivAvatar)
+            Glide.with(holder.itemView.context)
+                .load(user.avatar)
+                .apply(RequestOptions().override(80, 80).placeholder(R.drawable.icon_launcher))
+                .transform(CircleCrop())
+                .into(holder.ivAvatar)
 
-        holder.tvUserName.text = "${user.firstName} ${user.lastName}"
-        holder.tvEmail.text = user.email
+            holder.tvUserName.text = "${user.firstName} ${user.lastName}"
+            holder.tvEmail.text = user.email
+        }
     }
 
     class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -64,6 +73,8 @@ class UserAdapter(private val users: MutableList<DataItem>) :
                 filteredUsers.add(user)
             }
         }
+        isFilterEmpty = filteredUsers.isEmpty()
+
         notifyDataSetChanged()
     }
 

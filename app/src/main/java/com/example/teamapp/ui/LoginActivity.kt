@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.teamapp.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -35,7 +36,9 @@ class LoginActivity : ComponentActivity() {
                     val user = userDao.checkUserPass(appUsername, password)
 
                     if (user.isNotEmpty()) {
-                        // Login berhasil
+                        // Login berhasil, simpan status login
+                        saveLoginStatus()
+
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@LoginActivity, "Login Berhasil", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this@LoginActivity, MainActivity::class.java)
@@ -55,9 +58,29 @@ class LoginActivity : ComponentActivity() {
         txtDaftarListener()
     }
 
-    private fun txtDaftarListener(){
-        binding.txtDaftardulu.setOnClickListener{ // Gunakan objek binding
+    private fun txtDaftarListener() {
+        binding.txtDaftardulu.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
+    // Simpan SharedPreferences saat login
+    private fun saveLoginStatus() {
+        val sharedPreferences = getSharedPreferences("login_status", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("is_logged_in", true)
+        editor.apply()
+    }
+
+    // Fungsi untuk menyimpan data pengguna ke SharedPreferences
+    private fun saveUserData(userId: Int, username: String, email: String) {
+        val sharedPreferences = getSharedPreferences("user_data", AppCompatActivity.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        // Simpan data pengguna
+        editor.putInt("user_id", userId)
+        editor.putString("username", username)
+        editor.putString("email", email)
+        editor.apply()
+    }
 }
+

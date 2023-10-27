@@ -14,8 +14,17 @@ class SplashScreenActivity : ComponentActivity() {
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val sharedPreferences = getSharedPreferences("login_status", MODE_PRIVATE)
+        val isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false)
+
         Handler().postDelayed({
-            startActivity(Intent(this, LoginActivity::class.java))
+            if (isLoggedIn) {
+                // Pengguna telah login, arahkan ke MainActivity
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+                // Pengguna belum login, arahkan ke LoginActivity
+                startActivity(Intent(this, LoginActivity::class.java))
+            }
             finish()
         }, 3000)
     }
