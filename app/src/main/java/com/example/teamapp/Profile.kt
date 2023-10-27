@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.teamapp.ui.LoginActivity
 
 class Profile : Fragment() {
+    private lateinit var titleTextView: TextView
     private lateinit var usernameTextView: TextView
     private lateinit var emailTextView: TextView
     private lateinit var logoutButton: Button
@@ -25,6 +26,7 @@ class Profile : Fragment() {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         // Inisialisasi tampilan
+        titleTextView = view.findViewById(R.id.title)
         usernameTextView = view.findViewById(R.id.usernameTextView)
         emailTextView = view.findViewById(R.id.emailTextView)
         logoutButton = view.findViewById(R.id.logoutButton)
@@ -39,6 +41,9 @@ class Profile : Fragment() {
             // Mengambil data pengguna dari SharedPreferences
             val username = sharedPreferences.getString("username", "")
             val email = sharedPreferences.getString("email", "")
+
+            val firstChar = username?.take(1)
+            titleTextView.text = firstChar
 
             // Menampilkan informasi pengguna
             usernameTextView.text = username
