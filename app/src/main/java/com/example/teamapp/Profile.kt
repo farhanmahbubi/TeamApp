@@ -7,47 +7,54 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton  // Ubah import menjadi ini
-import androidx.appcompat.widget.AppCompatTextView
-import com.example.teamapp.database.AppDatabase
 import com.example.teamapp.ui.LoginActivity
 
 class Profile : Fragment() {
+    private lateinit var usernameTextView: TextView
+    private lateinit var emailTextView: TextView
+    private lateinit var logoutButton: Button
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        val buttonLogout = view.findViewById<AppCompatButton>(R.id.logoutbutton)
-        val usernameTextView = view.findViewById<AppCompatTextView>(R.id.textView) // Ganti dengan ID yang sesuai
-        val emailTextView = view.findViewById<AppCompatTextView>(R.id.textView2) // Ganti dengan ID yang sesuai
+
+        // Inisialisasi tampilan
+        usernameTextView = view.findViewById(R.id.usernameTextView)
+        emailTextView = view.findViewById(R.id.emailTextView)
+        logoutButton = view.findViewById(R.id.logoutButton)
 
         // Mendapatkan SharedPreferences
-        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("user_data", AppCompatActivity.MODE_PRIVATE)
+        sharedPreferences = requireActivity().getSharedPreferences("user_data", AppCompatActivity.MODE_PRIVATE)
 
+        // Cek apakah pengguna sudah login
         val isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false)
 
         if (isLoggedIn) {
-            // Mengambil data user dari Room Database
-            val userId = sharedPreferences.getInt("user_id", -1)
-            val userDao = AppDatabase.getDatabase(requireContext()).UserDao() // Perhatikan perubahan di sini
-            val user = userDao.getUserById(userId)
+            // Mengambil data pengguna dari SharedPreferences
+            val username = sharedPreferences.getString("username", "")
+            val email = sharedPreferences.getString("email", "")
 
-            // Menampilkan username dan email
-            usernameTextView.text = user.appUsername
-            emailTextView.text = user.email
+            // Menampilkan informasi pengguna
+            usernameTextView.text = username
+            emailTextView.text = email
         }
 
-        buttonLogout.setOnClickListener {
+        // Mengatur listener untuk tombol logout
+        logoutButton.setOnClickListener {
             // Menghapus status login dari SharedPreferences
             val editor = sharedPreferences.edit()
             editor.putBoolean("is_logged_in", false)
             editor.apply()
 
             // Navigasi kembali ke LoginActivity
-            startActivity(Intent(requireContext(), LoginActivity::class.java))
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            startActivity(intent)
             requireActivity().finish() // Menutup aktivitas saat logout
         }
 

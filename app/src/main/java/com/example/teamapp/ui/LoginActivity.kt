@@ -38,6 +38,10 @@ class LoginActivity : ComponentActivity() {
                     if (user.isNotEmpty()) {
                         // Login berhasil, simpan status login
                         saveLoginStatus()
+                        val userId = user[0].id
+                        val username = user[0].appUsername
+                        val email = user[0].email
+                        saveUserData(userId, username, email)
 
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@LoginActivity, "Login Berhasil", Toast.LENGTH_SHORT).show()
@@ -65,14 +69,14 @@ class LoginActivity : ComponentActivity() {
     }
     // Simpan SharedPreferences saat login
     private fun saveLoginStatus() {
-        val sharedPreferences = getSharedPreferences("login_status", MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putBoolean("is_logged_in", true)
         editor.apply()
     }
 
     // Fungsi untuk menyimpan data pengguna ke SharedPreferences
-    private fun saveUserData(userId: Int, username: String, email: String) {
+    private fun saveUserData(userId: Int, username: String?, email: String?) {
         val sharedPreferences = getSharedPreferences("user_data", AppCompatActivity.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
