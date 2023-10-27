@@ -14,7 +14,7 @@ class SplashScreenActivity : ComponentActivity() {
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sharedPreferences = getSharedPreferences("login_status", MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE)
         val isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false)
 
         Handler().postDelayed({
