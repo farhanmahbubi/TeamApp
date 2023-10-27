@@ -16,6 +16,15 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE app_username = :username AND password = :password")
     fun checkUserPass(username: String, password: String): List<User>
 
+    @Query("SELECT * FROM users WHERE id = :userId")
+    fun getUserById(userId: Int): User
+
+    @Query("SELECT * FROM users WHERE app_username = :appUsername")
+    fun getUserByUsername(appUsername: String): User
+
+    @Query("SELECT * FROM users WHERE email = :email")
+    fun getUserByEmail(email: String): User
+
     @Insert
     fun insert(vararg users: User): List<Long>
 

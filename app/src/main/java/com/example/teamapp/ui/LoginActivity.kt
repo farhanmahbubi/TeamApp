@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.teamapp.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -62,12 +63,24 @@ class LoginActivity : ComponentActivity() {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
-
-    // Fungsi untuk menyimpan status login
+    // Simpan SharedPreferences saat login
     private fun saveLoginStatus() {
         val sharedPreferences = getSharedPreferences("login_status", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putBoolean("is_logged_in", true)
         editor.apply()
     }
+
+    // Fungsi untuk menyimpan data pengguna ke SharedPreferences
+    private fun saveUserData(userId: Int, username: String, email: String) {
+        val sharedPreferences = getSharedPreferences("user_data", AppCompatActivity.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        // Simpan data pengguna
+        editor.putInt("user_id", userId)
+        editor.putString("username", username)
+        editor.putString("email", email)
+        editor.apply()
+    }
 }
+
