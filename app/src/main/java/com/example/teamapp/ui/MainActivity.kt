@@ -7,6 +7,7 @@ import com.example.teamapp.Home
 import com.example.teamapp.Profile
 import com.example.teamapp.R
 import com.example.teamapp.databinding.ActivityMainBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
