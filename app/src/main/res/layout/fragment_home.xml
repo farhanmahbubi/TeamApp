@@ -11,7 +11,8 @@
         android:id="@+id/materialCardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="20dp"
+        android:background="#D4F0F0"
         app:cardElevation="12dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,8 +25,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:iconifiedByDefault="false"
+                android:background="@color/white"
                 app:queryBackground="@android:color/transparent"
-                app:queryHint="Search here ..." />
+                app:queryHint="Cari Disini" />
 
     </com.google.android.material.card.MaterialCardView>
 

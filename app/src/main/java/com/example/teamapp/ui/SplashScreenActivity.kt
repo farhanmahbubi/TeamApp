@@ -18,6 +18,7 @@ class SplashScreenActivity : ComponentActivity() {
         val isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false)
 
         Handler().postDelayed({
+            startActivity(Intent(this, LoginActivity::class.java))
             if (isLoggedIn) {
                 // Pengguna telah login, arahkan ke MainActivity
                 startActivity(Intent(this, MainActivity::class.java))
