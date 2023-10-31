@@ -1,23 +1,31 @@
 package com.example.teamapp.ui
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
+import com.example.teamapp.Home
 import com.example.teamapp.database.AppDatabase
+import com.example.teamapp.database.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.example.teamapp.databinding.LoginActivityBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 
 class LoginActivity : ComponentActivity() {
     private lateinit var binding: LoginActivityBinding
-    lateinit var auth : FirebaseAuth
+    lateinit var auth: FirebaseAuth
 //    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,34 +46,36 @@ class LoginActivity : ComponentActivity() {
             val password = binding.edtPass.text.toString()
 
             //Validasi email
-            if (email.isEmpty()){
+            if (email.isEmpty()) {
                 binding.edtUser.error = "Email Harus Diisi"
                 binding.edtUser.requestFocus()
                 return@setOnClickListener
             }
 
             //Validasi email tidak sesuai
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 binding.edtPass.error = "Email Tidak Valid"
                 binding.edtPass.requestFocus()
                 return@setOnClickListener
             }
 
             //Validasi password
-            if (password.isEmpty()){
+            if (password.isEmpty()) {
                 binding.edtPass.error = "Password Harus Diisi"
                 binding.edtPass.requestFocus()
                 return@setOnClickListener
             }
 
-            LoginFirebase(email,password)
+            LoginFirebase(email, password)
         }
     }
+
     private fun LoginFirebase(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) {
                 if (it.isSuccessful) {
                     Toast.makeText(this, "Selamat datang $email", Toast.LENGTH_SHORT).show()
+                    saveLoginStatus()
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 } else {
@@ -75,14 +85,14 @@ class LoginActivity : ComponentActivity() {
     }
 
 
-
-    // Simpan SharedPreferences saat login
-//    private fun saveLoginStatus() {
-//        val sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE)
-//        val editor = sharedPreferences.edit()
-//        editor.putBoolean("is_logged_in", true)
-//        editor.apply()
-//    }
+// Simpan SharedPreferences saat login
+private fun saveLoginStatus() {
+    val sharedPreferences: SharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE)
+    val editor: SharedPreferences.Editor = sharedPreferences.edit()
+    editor.putBoolean("is_logged_in", true)
+    editor.apply()
+}
+}
 //
 //    // Fungsi untuk menyimpan data pengguna ke SharedPreferences
 //    private fun saveUserData(userId: Int, username: String?, email: String?) {
@@ -95,5 +105,5 @@ class LoginActivity : ComponentActivity() {
 //        editor.putString("email", email)
 //        editor.apply()
 //    }
-}
+
 

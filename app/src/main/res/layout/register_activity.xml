@@ -10,6 +10,9 @@
     tools:context=".ui.RegisterActivity"
     >
 
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/txt_daftar"
         android:layout_width="match_parent"
@@ -34,7 +37,7 @@
         android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/montserrat_medium"
-        android:text="Silahkan masukkan Nama Lengkap, E-mail dan Password anda! "
+        android:text="Silahkan masukkan Username Github, E-mail, Nama Lengkap, NIM, dan Password anda! "
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="12sp" />
@@ -91,6 +94,19 @@
             android:textSize="15sp" />
 
         <EditText
+            android:id="@+id/edt_nim"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/button_1"
+            android:fontFamily="@font/montserrat_medium"
+            android:hint="Nim"
+            android:paddingLeft="20dp"
+            android:textSize="15sp" />
+
+        <EditText
             android:id="@+id/edt_pass"
             android:layout_width="match_parent"
             android:layout_height="57dp"
@@ -109,7 +125,7 @@
             android:layout_width="match_parent"
             android:layout_height="57dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="40dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/button_2"

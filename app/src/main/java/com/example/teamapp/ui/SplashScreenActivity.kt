@@ -33,6 +33,6 @@ class SplashScreenActivity : ComponentActivity() {
                     startActivity(Intent(this, LoginActivity::class.java))
                 }
                 finish()
-        }, 2500)
+        }, 3000)
     }
 }
