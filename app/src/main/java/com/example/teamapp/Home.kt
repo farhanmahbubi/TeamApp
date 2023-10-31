@@ -8,97 +8,79 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.parsingjson.model.DataItem
 import com.dicoding.parsingjson.model.ResponseUser
 import com.dicoding.parsingjson.network.ApiConfig
+import com.dicoding.parsingjson.network.ApiService
 import com.example.teamapp.databinding.FragmentHomeBinding
+import com.example.teamapp.network.ApiClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Response
 import javax.security.auth.callback.Callback
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 class Home : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
-    private var _binding : FragmentHomeBinding? = null
-    private lateinit var adapter: UserAdapter
-    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private lateinit var binding: FragmentHomeBinding
+    private val adapter by lazy {
+        UserAdapter()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val recyclerView = binding.recycleView
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        adapter = UserAdapter(mutableListOf())
-
-        recyclerView.adapter = adapter
-
-        val searchView = binding.searchView
-
-        // Atur listener pencarian
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-            androidx.appcompat.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                adapter.filterUsers(newText.orEmpty())
-                return true
-            }
-        })
-
-        getUser()
-
-        return root
+    ): View {
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    private fun getUser() {
-        val client = ApiConfig.getApiService().getListUsers("1")
+        binding.recycleView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recycleView.setHasFixedSize(true)
+        binding.recycleView.adapter = adapter
 
-        client.enqueue(object : retrofit2.Callback<ResponseUser> {
-            override fun onResponse(call: Call<ResponseUser>, response: Response<ResponseUser>) {
+        // Menggunakan CoroutineScope untuk mengambil data dari API
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                // Memanggil API menggunakan Retrofit di coroutine IO
+                val response = withContext(Dispatchers.IO) {
+                    ApiClient.githubService.getUserGithub()
+                }
+
                 if (response.isSuccessful) {
-                    val dataArray = response.body()?.data as List<DataItem>
-                    for (data in dataArray) {
-                        adapter.addUser(data)
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        // Menyimpan data yang diterima dari API ke adapter
+                        adapter.setData(responseBody.items)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Data pengguna GitHub tidak ditemukan",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Gagal mengambil data pengguna GitHub",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+            } catch (e: Exception) {
+                // Handle kesalahan jika terjadi
+                Toast.makeText(
+                    requireContext(),
+                    "Terjadi kesalahan: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-
-            override fun onFailure(call: Call<ResponseUser>, t: Throwable) {
-                Toast.makeText(activity, t.message, Toast.LENGTH_SHORT).show()
-                t.printStackTrace()
-            }
-        })
-    }
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Home().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        }
     }
 }
