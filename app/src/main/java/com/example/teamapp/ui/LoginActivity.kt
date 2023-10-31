@@ -18,7 +18,6 @@ import com.google.firebase.auth.FirebaseAuth
 class LoginActivity : ComponentActivity() {
     private lateinit var binding: LoginActivityBinding
     lateinit var auth : FirebaseAuth
-//    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +25,6 @@ class LoginActivity : ComponentActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
-
-//        db = AppDatabase.getDatabase(this)
 
         binding.txtDaftardulu.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
@@ -73,27 +70,5 @@ class LoginActivity : ComponentActivity() {
                 }
             }
     }
-
-
-
-    // Simpan SharedPreferences saat login
-//    private fun saveLoginStatus() {
-//        val sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE)
-//        val editor = sharedPreferences.edit()
-//        editor.putBoolean("is_logged_in", true)
-//        editor.apply()
-//    }
-//
-//    // Fungsi untuk menyimpan data pengguna ke SharedPreferences
-//    private fun saveUserData(userId: Int, username: String?, email: String?) {
-//        val sharedPreferences = getSharedPreferences("user_data", AppCompatActivity.MODE_PRIVATE)
-//        val editor = sharedPreferences.edit()
-//
-//        // Simpan data pengguna
-//        editor.putInt("user_id", userId)
-//        editor.putString("username", username)
-//        editor.putString("email", email)
-//        editor.apply()
-//    }
 }
 
