@@ -30,7 +30,7 @@ class SplashScreenActivity : ComponentActivity() {
                     startActivity(Intent(this, MainActivity::class.java))
                 } else {
                     // Pengguna belum login, arahkan ke LoginActivity
-                    startActivity(Intent(this, LoginActivity::class.java))
+                    startActivity(Intent(this, OnBoarding::class.java))
                 }
                 finish()
         }, 3000)
