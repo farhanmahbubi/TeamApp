@@ -33,6 +33,6 @@ class SplashScreenActivity : ComponentActivity() {
                     startActivity(Intent(this, OnBoarding::class.java))
                 }
                 finish()
-        }, 2500)
+        }, 3000)
     }
 }

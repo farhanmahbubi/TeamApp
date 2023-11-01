@@ -26,6 +26,8 @@ class RegisterActivity : ComponentActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
+//        db = AppDatabase.getDatabase(this)
+
         binding.txtLoginsekarang.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
@@ -33,41 +35,71 @@ class RegisterActivity : ComponentActivity() {
 
         binding.btnDaftar.setOnClickListener {
 
-            val username = binding.edtUsername.text.toString()
+            val email = binding.edtUsername.text.toString()
             val password = binding.edtPass.text.toString()
-            val emailgit = binding.edtUsrgithub.text.toString()
-            val email = binding.edtEmail.text.toString()
 
-            // Validasi email
-            if (username.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
-                binding.edtUsername.error = if (username.isEmpty()) "Email Harus Diisi" else "Email Tidak Valid"
+            //Validasi email
+            if (email.isEmpty()) {
+                binding.edtUsername.error = "Email Harus Diisi"
                 binding.edtUsername.requestFocus()
                 return@setOnClickListener
             }
 
-            // Validasi password
-            if (password.isEmpty() || password.length < 6) {
-                binding.edtPass.error = if (password.isEmpty()) "Password Harus Diisi" else "Password Minimal 6 Karakter"
+            //Validasi email tidak sesuai
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                binding.edtUsername.error = "Email Tidak Valid"
+                binding.edtUsername.requestFocus()
+                return@setOnClickListener
+            }
+
+            //Validasi password
+            if (password.isEmpty()) {
+                binding.edtPass.error = "Password Harus Diisi"
                 binding.edtPass.requestFocus()
                 return@setOnClickListener
             }
 
-            // Validasi emailgit dan email
-            if (emailgit.isEmpty() || email.isEmpty()) {
-                Toast.makeText(this, "Harap isi semua kolom", Toast.LENGTH_SHORT).show()
+            //Validasi panjang password
+            if (password.length < 6) {
+                binding.edtPass.error = "Password Minimal 6 Karakter"
+                binding.edtPass.requestFocus()
                 return@setOnClickListener
             }
 
-            if (!Patterns.EMAIL_ADDRESS.matcher(emailgit).matches() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(this, "Format email tidak valid", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val fullEmail = "$emailgit@$email" // Menggabungkan emailgit dan email
-
-            RegisterFirebase(fullEmail, password)
+            RegisterFirebase(email, password)
         }
     }
+
+//            val githubUsername = binding.edtUsrgithub.text.toString()
+//            val email = binding.edtEmail.text.toString()
+//            val appUsername = binding.edtUsername.text.toString()
+//            val password = binding.edtPass.text.toString()
+
+//            if (githubUsername.isNotEmpty() && email.isNotEmpty() && appUsername.isNotEmpty() && password.isNotEmpty()) {
+//                val userDao = db.UserDao()
+//                val user = User(0, githubUsername, email, appUsername, password)
+//
+//                // Jalankan operasi penyimpanan dengan Kotlin Coroutines
+//                GlobalScope.launch {
+//                    val useruId = userDao.insert(user)
+//
+//                    if (useruId.isNotEmpty()) {
+//                        // Data berhasil disimpan
+//                        withContext(Dispatchers.Main) {
+//                            Toast.makeText(this@RegisterActivity, "Registrasi Berhasil", Toast.LENGTH_SHORT).show()
+//                            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+//                            startActivity(intent)
+//                        }
+//                    } else {
+//                        // Gagal menyimpan data
+//                        withContext(Dispatchers.Main) {
+//                            Toast.makeText(this@RegisterActivity, "User Sudah Ada", Toast.LENGTH_SHORT).show()
+//                        }
+//                    }
+//                }
+//            } else {
+//                Toast.makeText(this@RegisterActivity, "Harap isi semua kolom", Toast.LENGTH_SHORT).show()
+//            }
 
     private fun RegisterFirebase(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
