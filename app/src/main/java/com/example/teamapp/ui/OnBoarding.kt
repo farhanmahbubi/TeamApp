@@ -1,6 +1,5 @@
 package com.example.teamapp.ui
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
@@ -19,9 +18,11 @@ import com.example.teamapp.databinding.LoginActivityBinding
 class OnBoarding : AppCompatActivity() {
 
     private lateinit var binding: FragmentOnBoardingBinding
+    private lateinit var sharedPreferences: SharedPreferences
 
     companion object {
-        private var isFirstRun = true
+        private const val PREFS_NAME = "user_data"
+        private const val PREFS_ONBOARDING_SHOWN = "onboarding_shown"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,18 +30,23 @@ class OnBoarding : AppCompatActivity() {
         binding = FragmentOnBoardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (isFirstRun) {
-            // First run, show onboarding
-            isFirstRun = false
-        } else {
-            // Not the first run, go directly to Login
+        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        val onboardingShown = sharedPreferences.getBoolean(PREFS_ONBOARDING_SHOWN, false)
+
+        if (onboardingShown) {
+            // Jika onboarding sudah pernah ditampilkan, arahkan ke LoginActivity
             startActivity(Intent(this, LoginActivity::class.java))
-            finish() // Finish current activity to prevent returning to onboarding
+            finish() // Selesai agar tidak kembali ke onboarding
         }
 
         binding.button.setOnClickListener {
+            // Setelah tombol ditekan, tandai bahwa onboarding sudah ditampilkan
+            with(sharedPreferences.edit()) {
+                putBoolean(PREFS_ONBOARDING_SHOWN, true)
+                apply()
+            }
             startActivity(Intent(this, LoginActivity::class.java))
-            finish() // Finish current activity after navigating to LoginActivity
+            finish() // Selesai setelah navigasi ke LoginActivity
         }
 
         setupView()
