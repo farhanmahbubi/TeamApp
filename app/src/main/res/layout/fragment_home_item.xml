@@ -25,16 +25,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/itemNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Bahasa Pemrograman"
-                app:layout_constraintStart_toEndOf="@+id/cardView"
-                app:layout_constraintTop_toTopOf="parent" />
+<!--            <TextView-->
+<!--                android:id="@+id/itemNumber"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="15dp"-->
+<!--                android:layout_marginTop="15dp"-->
+<!--                android:fontFamily="@font/montserrat_medium"-->
+<!--                android:text="Bahasa Pemrograman"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/cardView"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView"
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="25dp"
                 android:fontFamily="@font/montserrat_extrabold"
                 android:text="Halo Halo Bandung"
                 android:textSize="20sp"

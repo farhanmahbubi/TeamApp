@@ -3,11 +3,10 @@ package com.example.teamapp.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.example.teamapp.Home
+import com.example.teamapp.home.Home
 import com.example.teamapp.Profile
 import com.example.teamapp.R
 import com.example.teamapp.databinding.ActivityMainBinding
-import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

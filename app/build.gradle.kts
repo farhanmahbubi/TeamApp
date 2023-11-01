@@ -16,6 +16,10 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+//        buildConfigField("String", "API_URL", '"https://api.github.com/"')
+//        buildConfigField("String", "TOKEN", '"token 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"')
+
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -59,6 +63,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.4")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.4")
 
+    implementation("io.coil-kt:coil:1.4.0")
     // retrofit
     implementation("com.google.code.gson:gson:2.8.9")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -78,6 +83,9 @@ dependencies {
     // Livedata
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+
+    implementation ("androidx.activity:activity-ktx:1.4.0")
+    implementation ("androidx.fragment:fragment-ktx:1.4.1")
 
     //room
     implementation("androidx.room:room-runtime:2.5.2")
