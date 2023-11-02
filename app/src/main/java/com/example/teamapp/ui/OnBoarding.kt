@@ -1,6 +1,5 @@
 package com.example.teamapp.ui
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
@@ -17,32 +16,37 @@ import com.example.teamapp.databinding.FragmentOnBoardingBinding
 import com.example.teamapp.databinding.LoginActivityBinding
 
 class OnBoarding : AppCompatActivity() {
+
     private lateinit var binding: FragmentOnBoardingBinding
-//    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
+
+    companion object {
+        private const val PREFS_NAME = "user_data"
+        private const val PREFS_ONBOARDING_SHOWN = "onboarding_shown"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentOnBoardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//
-//        // Initialize SharedPreferences
-//        sharedPreferences = getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
-//
-//        // Check if onboarding has already been shown
-//        if (sharedPreferences.getBoolean("isFirstRun", true)) {
-//            // Onboarding has not been shown, navigate to onboarding
-//            with(sharedPreferences.edit()) {
-//                putBoolean("isFirstRun", false)
-//                apply()
-//            }
-//        } else {
-//            // Onboarding has already been shown, navigate to login activity
-//            startActivity(Intent(this, LoginActivity::class.java))
-//            finish() // Finish current activity to prevent returning to onboarding
-//        }
+
+        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        val onboardingShown = sharedPreferences.getBoolean(PREFS_ONBOARDING_SHOWN, false)
+
+        if (onboardingShown) {
+            // Jika onboarding sudah pernah ditampilkan, arahkan ke LoginActivity
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish() // Selesai agar tidak kembali ke onboarding
+        }
 
         binding.button.setOnClickListener {
+            // Setelah tombol ditekan, tandai bahwa onboarding sudah ditampilkan
+            with(sharedPreferences.edit()) {
+                putBoolean(PREFS_ONBOARDING_SHOWN, true)
+                apply()
+            }
             startActivity(Intent(this, LoginActivity::class.java))
-            finish() // Finish current activity after navigating to LoginActivity
+            finish() // Selesai setelah navigasi ke LoginActivity
         }
 
         setupView()
@@ -60,5 +64,4 @@ class OnBoarding : AppCompatActivity() {
         }
         supportActionBar?.hide()
     }
-
 }
