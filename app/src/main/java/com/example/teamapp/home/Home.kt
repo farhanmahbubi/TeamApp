@@ -6,26 +6,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import com.example.teamapp.utils.Result
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.teamapp.databinding.FragmentHomeBinding
-import com.example.teamapp.detail.Detail
+import com.example.teamapp.detail.Detaill
 import com.example.teamapp.model.ResponseUserGithub
-
 
 class Home : Fragment() {
     private lateinit var binding: FragmentHomeBinding
-    private val adapter by lazy {
-        UserAdapter { user ->
-            val intent = Intent(requireContext(), Detail::class.java).apply {
-                putExtra("username", user.login)
-            }
-            startActivity(intent)
-        }
-    }
+    private lateinit var adapter: UserAdapter
+    private lateinit var userList: MutableList<ResponseUserGithub.Item>
 
     private val viewModel by viewModels<HomeViewModel>()
 
@@ -36,20 +30,35 @@ class Home : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // Set up RecyclerView
+        adapter = UserAdapter(mutableListOf()) { user ->
+            val intent = Intent(requireContext(), Detaill::class.java).apply {
+                putExtra("username", user.login)
+            }
+            startActivity(intent)
+        }
+
         binding.recycleView.layoutManager = LinearLayoutManager(requireContext())
         binding.recycleView.setHasFixedSize(true)
         binding.recycleView.adapter = adapter
 
-        viewModel.resultUser.observe(viewLifecycleOwner) {
-            when (it) {
+        viewModel.resultUser.observe(viewLifecycleOwner) { result ->
+            when (result) {
                 is Result.Success<*> -> {
-                    adapter.setData(it.data as MutableList<ResponseUserGithub.Item>)
+                    userList = result.data as MutableList<ResponseUserGithub.Item>
+                    adapter.setData(userList)
+                    setupSearchView()
                 }
+
                 is Result.Error -> {
-                    Toast.makeText(requireContext(), it.exception.message.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        result.exception.message.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+
                 is Result.Loading -> {
-                    binding.progressBar.isVisible = it.isLoading
+                    binding.progressBar.isVisible = result.isLoading
                 }
             }
         }
@@ -57,5 +66,20 @@ class Home : Fragment() {
         viewModel.getUser()
 
         return binding.root
+    }
+
+    private fun setupSearchView() {
+        binding.searchView.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return true
+            }
+        })
     }
 }

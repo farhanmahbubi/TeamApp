@@ -40,7 +40,7 @@
         </activity>
 
         <activity
-            android:name=".detail.Detail">
+            android:name=".detail.Detaill">
         </activity>
 
         <activity
