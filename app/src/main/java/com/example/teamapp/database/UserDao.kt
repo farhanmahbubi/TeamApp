@@ -1,33 +1,20 @@
 package com.example.teamapp.database
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import com.example.teamapp.model.ResponseUserGithub
 
 @Dao
 interface UserDao {
-    @Query("SELECT * FROM users")
-    fun getAll(): List<User>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(user: ResponseUserGithub.Item)
 
-    @Query("SELECT * FROM users WHERE id IN (:userIds)")
-    fun loadAllByIds(userIds: IntArray): List<User>
+    @Query("SELECT * FROM User")
+    fun loadAll(): LiveData<MutableList<ResponseUserGithub.Item>>
 
-    @Query("SELECT * FROM users WHERE app_username = :username AND password = :password")
-    fun checkUserPass(username: String, password: String): List<User>
-
-    @Query("SELECT * FROM users WHERE id = :userId")
-    fun getUserById(userId: Int): User
-
-    @Query("SELECT * FROM users WHERE app_username = :appUsername")
-    fun getUserByUsername(appUsername: String): User
-
-    @Query("SELECT * FROM users WHERE email = :email")
-    fun getUserByEmail(email: String): User
-
-    @Insert
-    fun insert(vararg users: User): List<Long>
+    @Query("SELECT * FROM User WHERE id LIKE :id LIMIT 1")
+    fun findById(id: Int): ResponseUserGithub.Item
 
     @Delete
-    fun delete(user: User)
+    fun delete(user: ResponseUserGithub.Item)
 }
