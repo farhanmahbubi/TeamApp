@@ -10,8 +10,8 @@
     android:padding="16dp"
     tools:context=".Profile">
 
-    <TextView
-        android:id="@+id/title"
+    <ImageView
+        android:id="@+id/profileImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:background="@drawable/circle"
@@ -23,7 +23,7 @@
         android:padding="8dp"/>
 
     <TextView
-        android:id="@+id/usernameTextView"
+        android:id="@+id/profileRealname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Username"
@@ -32,7 +32,7 @@
         android:layout_marginTop="16dp" />
 
     <TextView
-        android:id="@+id/emailTextView"
+        android:id="@+id/profileUsergithub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="user@example.com"

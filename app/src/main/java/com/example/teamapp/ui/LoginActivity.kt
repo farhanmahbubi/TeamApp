@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import com.example.teamapp.PreferencesDataStore
 import com.example.teamapp.databinding.LoginActivityBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -27,11 +28,16 @@ class LoginActivity : ComponentActivity() {
         binding.txtDaftardulu.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
-
+        val preferenceDataStore = PreferencesDataStore(this)
         binding.btnMasuk.setOnClickListener {
+
             val email = binding.edtUser.text.toString()
             val password = binding.edtPass.text.toString()
-
+            val user = FirebaseAuth.getInstance().currentUser
+            val userId = user?.uid
+            if (userId != null){
+                preferenceDataStore.saveValue2(userId)
+            }
             //Validasi email
             if (email.isEmpty()) {
                 binding.edtUser.error = "Email Harus Diisi"

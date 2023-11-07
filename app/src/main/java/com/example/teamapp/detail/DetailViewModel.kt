@@ -50,7 +50,7 @@ class DetailViewModel(private val db: DbModule) : ViewModel() {
             flow {
                 val response = ApiClient
                     .githubService
-                    .getDetailUserGithub(username)
+                    .getDetailUserGithub1(username)
 
                 emit(response)
             }.onStart {

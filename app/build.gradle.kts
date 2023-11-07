@@ -87,6 +87,9 @@ dependencies {
     implementation ("androidx.activity:activity-ktx:1.4.0")
     implementation ("androidx.fragment:fragment-ktx:1.4.1")
 
+    //koil
+    implementation("io.coil-kt:coil:1.4.0")
+
     //room
     implementation("androidx.room:room-runtime:2.5.2")
     ksp("androidx.room:room-compiler:2.5.2")

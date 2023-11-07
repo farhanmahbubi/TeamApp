@@ -1,5 +1,7 @@
 package com.example.teamapp.model
 
+import com.google.gson.annotations.SerializedName
+
 data class ResponseDetailUser(
     val avatar_url: String,
     val bio: Any,
