@@ -31,6 +31,8 @@ class OnBoarding : AppCompatActivity() {
         setContentView(binding.root)
 
         sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+
+        // Periksa apakah onboarding sudah pernah ditampilkan
         val onboardingShown = sharedPreferences.getBoolean(PREFS_ONBOARDING_SHOWN, false)
 
         if (onboardingShown) {
@@ -49,9 +51,11 @@ class OnBoarding : AppCompatActivity() {
             finish() // Selesai setelah navigasi ke LoginActivity
         }
 
+        // Panggil fungsi untuk mengatur tampilan onboarding
         setupView()
     }
 
+    // Fungsi untuk mengatur tampilan onboarding, seperti menyembunyikan status bar
     private fun setupView() {
         @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

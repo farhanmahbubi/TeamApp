@@ -14,7 +14,6 @@ import com.google.firebase.auth.FirebaseAuth
 class LoginActivity : ComponentActivity() {
     private lateinit var binding: LoginActivityBinding
     lateinit var auth: FirebaseAuth
-//    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,46 +22,51 @@ class LoginActivity : ComponentActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-//        db = AppDatabase.getDatabase(this)
-
+        // Pengaturan OnClickListener untuk tombol "Daftar Dulu"
         binding.txtDaftardulu.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
-        val preferenceDataStore = PreferencesDataStore(this)
-        binding.btnMasuk.setOnClickListener {
 
+        val preferenceDataStore = PreferencesDataStore(this)
+
+        // Pengaturan OnClickListener untuk tombol "Masuk"
+        binding.btnMasuk.setOnClickListener {
             val email = binding.edtUser.text.toString()
             val password = binding.edtPass.text.toString()
             val user = FirebaseAuth.getInstance().currentUser
             val userId = user?.uid
-            if (userId != null){
+
+            if (userId != null) {
                 preferenceDataStore.saveValue2(userId)
             }
-            //Validasi email
+
+            // Validasi email
             if (email.isEmpty()) {
                 binding.edtUser.error = "Email Harus Diisi"
                 binding.edtUser.requestFocus()
                 return@setOnClickListener
             }
 
-            //Validasi email tidak sesuai
+            // Validasi email yang tidak valid
             if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 binding.edtPass.error = "Email Tidak Valid"
                 binding.edtPass.requestFocus()
                 return@setOnClickListener
             }
 
-            //Validasi password
+            // Validasi password
             if (password.isEmpty()) {
                 binding.edtPass.error = "Password Harus Diisi"
                 binding.edtPass.requestFocus()
                 return@setOnClickListener
             }
 
+            // Memanggil fungsi untuk melakukan login Firebase
             LoginFirebase(email, password)
         }
     }
 
+    // Fungsi untuk melakukan login menggunakan Firebase Authentication
     private fun LoginFirebase(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) {
@@ -77,26 +81,15 @@ class LoginActivity : ComponentActivity() {
             }
     }
 
+    // Fungsi untuk menyimpan status login menggunakan SharedPreferences
+    private fun saveLoginStatus() {
+        val sharedPreferences: SharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        editor.putBoolean("is_logged_in", true)
+        editor.apply()
+    }
+}
 
-// Simpan SharedPreferences saat login
-private fun saveLoginStatus() {
-    val sharedPreferences: SharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE)
-    val editor: SharedPreferences.Editor = sharedPreferences.edit()
-    editor.putBoolean("is_logged_in", true)
-    editor.apply()
-}
-}
-//
-//    // Fungsi untuk menyimpan data pengguna ke SharedPreferences
-//    private fun saveUserData(userId: Int, username: String?, email: String?) {
-//        val sharedPreferences = getSharedPreferences("user_data", AppCompatActivity.MODE_PRIVATE)
-//        val editor = sharedPreferences.edit()
-//
-//        // Simpan data pengguna
-//        editor.putInt("user_id", userId)
-//        editor.putString("username", username)
-//        editor.putString("email", email)
-//        editor.apply()
-//    }
+
 
 

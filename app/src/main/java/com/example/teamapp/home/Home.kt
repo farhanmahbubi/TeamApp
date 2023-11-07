@@ -32,21 +32,23 @@ class Home : Fragment() {
 
         // Set up RecyclerView
         adapter = UserAdapter(mutableListOf()) { user ->
+            // Menginisialisasi DetailFragment saat item daftar pengguna diklik
             val detailFragment = Detaill()
             val bundle = Bundle()
             bundle.putString("username", user.login)
             detailFragment.arguments = bundle
 
             val transaction = parentFragmentManager.beginTransaction() // Menggunakan parentFragmentManager di dalam Fragment
-            transaction.replace(R.id.frame_layout, detailFragment) // Ganti R.id.fragment_container dengan ID wadah fragmen Anda
+            transaction.replace(R.id.frame_layout, detailFragment) // Ganti R.id.frame_layout dengan ID wadah fragmen Anda
             transaction.addToBackStack(null) // Opsional, untuk menambahkan transaksi ke back stack
             transaction.commit()
         }
-        
+
         binding.recycleView.layoutManager = LinearLayoutManager(requireContext())
         binding.recycleView.setHasFixedSize(true)
         binding.recycleView.adapter = adapter
 
+        // Mengamati hasil pengambilan daftar pengguna dari ViewModel
         viewModel.resultUser.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Success<*> -> {
@@ -64,11 +66,13 @@ class Home : Fragment() {
                 }
 
                 is Result.Loading -> {
+                    // Menampilkan atau menyembunyikan progressBar
                     binding.progressBar.isVisible = result.isLoading
                 }
             }
         }
 
+        // Memanggil metode untuk mengambil daftar pengguna dari ViewModel
         viewModel.getUser()
 
         return binding.root
@@ -83,6 +87,7 @@ class Home : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                // Memfilter daftar pengguna berdasarkan teks pencarian
                 adapter.filter.filter(newText)
                 return true
             }

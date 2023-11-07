@@ -16,23 +16,28 @@ class SplashScreenActivity : ComponentActivity() {
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Animasi fade in untuk tampilan splash
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         binding.root.startAnimation(fadeIn)
 
+        // Mengakses SharedPreferences untuk memeriksa status login
         val sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE)
         val isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false)
 
+        // Handler untuk menunda tindakan selanjutnya selama 3 detik (3000 milidetik)
         Handler().postDelayed({
+            // Animasi fade out saat splash selesai
             val fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
             binding.root.startAnimation(fadeOut)
-                if (isLoggedIn) {
-                    // Pengguna telah login, arahkan ke MainActivity
-                    startActivity(Intent(this, MainActivity::class.java))
-                } else {
-                    // Pengguna belum login, arahkan ke LoginActivity
-                    startActivity(Intent(this, OnBoarding::class.java))
-                }
-                finish()
-        }, 3000)
+
+            if (isLoggedIn) {
+                // Jika pengguna sudah login, arahkan ke MainActivity
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+                // Jika pengguna belum login, arahkan ke OnBoarding (atau LoginActivity)
+                startActivity(Intent(this, OnBoarding::class.java))
+            }
+            finish() // Selesai untuk menghindari kembali ke SplashScreenActivity
+        }, 3000) // Menunda selama 3 detik sebelum menjalankan tindakan selanjutnya
     }
 }

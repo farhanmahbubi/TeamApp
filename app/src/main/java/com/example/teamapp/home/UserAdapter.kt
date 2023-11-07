@@ -11,25 +11,27 @@ import com.example.teamapp.model.ResponseUserGithub
 import java.util.*
 
 class UserAdapter(
-    private var fullData: MutableList<ResponseUserGithub.Item>,
-    private val listener: (ResponseUserGithub.Item) -> Unit
+    private var fullData: MutableList<ResponseUserGithub.Item>, // List data pengguna GitHub lengkap
+    private val listener: (ResponseUserGithub.Item) -> Unit // Listener untuk item yang diklik
 ) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>(), Filterable {
 
-    private var filteredData: MutableList<ResponseUserGithub.Item> = fullData.toMutableList()
+    private var filteredData: MutableList<ResponseUserGithub.Item> = fullData.toMutableList() // Inisialisasi data yang difilter dengan data awal
 
     init {
-        this.fullData = fullData.toMutableList()
-        this.filteredData = fullData.toMutableList()
+        this.fullData = fullData.toMutableList() // Salin data awal ke fullData
+        this.filteredData = fullData.toMutableList() // Salin data awal ke filteredData
     }
 
+    // Fungsi ini digunakan untuk mengganti data pada adapter dengan data baru.
     fun setData(data: MutableList<ResponseUserGithub.Item>) {
-        this.fullData.clear()
-        this.fullData.addAll(data)
-        this.filteredData = fullData.toMutableList()
-        notifyDataSetChanged()
+        this.fullData.clear() // Kosongkan data lengkap
+        this.fullData.addAll(data) // Tambahkan data baru ke data lengkap
+        this.filteredData = fullData.toMutableList() // Salin data baru ke data yang difilter
+        notifyDataSetChanged() // Notifikasi adapter bahwa data telah berubah
     }
 
+    // Kelas ViewHolder untuk mengatur tampilan item pengguna
     class UserViewHolder(private val binding: FragmentHomeItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseUserGithub.Item) {
             // Menggunakan Glide untuk mengisi gambar pengguna
@@ -42,19 +44,23 @@ class UserAdapter(
         }
     }
 
+    // Fungsi ini digunakan untuk membuat ViewHolder baru saat tampilan item dibuat
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder =
         UserViewHolder(FragmentHomeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
+    // Fungsi ini digunakan untuk mengisi tampilan item dengan data pengguna
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val item = filteredData[position]
         holder.bind(item)
         holder.itemView.setOnClickListener {
-            listener(item)
+            listener(item) // Menangani klik item dan memanggil listener
         }
     }
 
+    // Fungsi ini mengembalikan jumlah item dalam adapter
     override fun getItemCount(): Int = filteredData.size
 
+    // Fungsi ini mengimplementasikan filter untuk mencari pengguna berdasarkan kata kunci
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
@@ -62,15 +68,15 @@ class UserAdapter(
                 val charSearch = constraint.toString().toLowerCase(Locale.ROOT)
 
                 if (charSearch.isEmpty()) {
-                    filteredData = fullData.toMutableList()
+                    filteredData = fullData.toMutableList() // Jika kata kunci kosong, tampilkan semua data
                 } else {
                     val resultList = mutableListOf<ResponseUserGithub.Item>()
                     for (row in fullData) {
                         if (row.login.toLowerCase(Locale.ROOT).contains(charSearch)) {
-                            resultList.add(row)
+                            resultList.add(row) // Tambahkan item yang sesuai dengan kata kunci ke hasil
                         }
                     }
-                    filteredData = resultList
+                    filteredData = resultList // Setel data yang difilter ke hasil pencarian
                 }
 
                 val results = FilterResults()
@@ -81,7 +87,7 @@ class UserAdapter(
             @Suppress("UNCHECKED_CAST")
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 filteredData = results?.values as? MutableList<ResponseUserGithub.Item> ?: fullData
-                notifyDataSetChanged()
+                notifyDataSetChanged() // Notifikasi adapter bahwa data hasil pencarian telah berubah
             }
         }
     }

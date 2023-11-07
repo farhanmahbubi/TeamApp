@@ -32,13 +32,21 @@ class Detaill : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Inflasi tata letak fragment menggunakan data binding
         binding = FragmentHomeDetailBinding.inflate(inflater, container, false)
+
+        // Mendapatkan username dari argument fragment
         val username = requireArguments().getString("username") ?: ""
+
+        // Mendapatkan objek item dari argument fragment
         val item = arguments?.getParcelable<ResponseUserGithub.Item>("item")
+
+        // Mengamati hasil pengambilan detail pengguna dari ViewModel
         viewModel.resultDetaiUser.observe(viewLifecycleOwner) {
             when (it) {
                 is Result.Success<*> -> {
                     val user = it.data as ResponseDetailUser
+                    // Memuat gambar pengguna dengan transformasi lingkaran
                     binding.image.load(user.avatar_url) {
                         transformations(CircleCropTransformation())
                     }
@@ -54,35 +62,46 @@ class Detaill : Fragment() {
                 }
 
                 is Result.Loading -> {
+                    // Menampilkan atau menyembunyikan progressBar
                     binding.progressBar.isVisible = it.isLoading
                 }
             }
         }
+
+        // Mengambil detail pengguna dari ViewModel
         viewModel.getDetailUser(username)
 
+        // Mengamati hasil apakah pengguna sudah ada di daftar favorit
         viewModel.resultSuksesFavorite.observe(viewLifecycleOwner) { isFavorite ->
             if (isFavorite) {
+                // Mengubah warna ikon tombol favorit menjadi merah
                 binding.btnFavorite.changeIconColor(R.color.red)
             }
         }
 
+        // Mengamati hasil apakah pengguna telah dihapus dari daftar favorit
         viewModel.resultDeleteFavorite.observe(viewLifecycleOwner) { isDeleted ->
             if (isDeleted) {
+                // Mengubah warna ikon tombol favorit menjadi putih
                 binding.btnFavorite.changeIconColor(R.color.white)
             }
         }
 
+        // Menambahkan atau menghapus pengguna dari daftar favorit saat tombol favorit ditekan
         binding.btnFavorite.setOnClickListener {
             item?.let {
                 viewModel.setFavorite(it)
             }
         }
 
+        // Mengecek apakah pengguna sudah ada di daftar favorit saat fragment dibuka
         item?.id?.let { itemId ->
             viewModel.findFavorite(itemId) { isFavorite ->
                 if (isFavorite as Boolean) {
+                    // Mengubah warna ikon tombol favorit menjadi merah
                     binding.btnFavorite.changeIconColor(R.color.red)
                 } else {
+                    // Mengubah warna ikon tombol favorit menjadi putih
                     binding.btnFavorite.changeIconColor(R.color.white)
                 }
             }
@@ -91,6 +110,7 @@ class Detaill : Fragment() {
     }
 
     private fun FloatingActionButton.changeIconColor(@ColorRes color: Int) {
+        // Mengubah warna ikon tombol favorit sesuai dengan parameter warna
         Log.d("ChangeIconColor", "Changing icon color to $color")
         imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this.context, color))
     }

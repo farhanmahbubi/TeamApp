@@ -20,13 +20,17 @@ class DetailViewModel(private val db: DbModule) : ViewModel() {
     val resultDeleteFavorite = MutableLiveData<Boolean>()
 
     private var isFavorite = false
+
+    // Metode untuk menambahkan atau menghapus pengguna dari daftar favorit
     fun setFavorite(item: ResponseUserGithub.Item?) {
         viewModelScope.launch {
             item?.let {
                 if (isFavorite) {
+                    // Menghapus pengguna dari daftar favorit dalam database lokal
                     db.userDao.delete(item)
                     resultDeleteFavorite.value = true
                 } else {
+                    // Menambahkan pengguna ke dalam daftar favorit dalam database lokal
                     db.userDao.insert(item)
                     resultSuksesFavorite.value = true
                 }
@@ -35,6 +39,7 @@ class DetailViewModel(private val db: DbModule) : ViewModel() {
         }
     }
 
+    // Metode untuk mencari apakah pengguna sudah ada di daftar favorit
     fun findFavorite(id: Int, listenFavorite: (Any?) -> Unit) {
         viewModelScope.launch {
             val user = db.userDao.findById(id)
@@ -44,8 +49,9 @@ class DetailViewModel(private val db: DbModule) : ViewModel() {
         }
     }
 
+    // Metode untuk mengambil detail pengguna GitHub dari API
     fun getDetailUser(username : String) {
-        // Menggunakan viewModelScope untuk mengambil data dari API
+        // Menggunakan viewModelScope untuk menjalankan operasi asinkron
         viewModelScope.launch {
             flow {
                 val response = ApiClient
@@ -54,17 +60,23 @@ class DetailViewModel(private val db: DbModule) : ViewModel() {
 
                 emit(response)
             }.onStart {
+                // Memberitahu bahwa proses pengambilan data sedang dimulai
                 resultDetaiUser.value = Result.Loading(true)
             }.onCompletion {
+                // Memberitahu bahwa proses pengambilan data telah selesai
                 resultDetaiUser.value = Result.Loading(false)
             }.catch {
+                // Menangani kesalahan yang terjadi selama pengambilan data
                 it.printStackTrace()
                 resultDetaiUser.value = Result.Error(it)
             }.collect {
+                // Mengirimkan hasil pengambilan data sukses
                 resultDetaiUser.value = Result.Success(it)
             }
         }
     }
+
+    // Factory class untuk ViewModel
     class Factory(private val db: DbModule) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T = DetailViewModel(db) as T
     }

@@ -40,17 +40,20 @@ class Profile : Fragment() {
         val reference = database.getReference("Users")
         val preferencesDataStore = PreferencesDataStore(requireContext())
         val dataID = preferencesDataStore.getValue2()
-        if(dataID != null){
+
+        if (dataID != null) {
             val githubUsernameReference = reference.child(dataID).child("usernameGithub")
-            githubUsernameReference.addListenerForSingleValueEvent(object : ValueEventListener{
-                override fun onDataChange(datasnapshot: DataSnapshot) {
-                   val githubUsername = datasnapshot.getValue(String::class.java)
-                    if(githubUsername != null){
+            githubUsernameReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val githubUsername = dataSnapshot.getValue(String::class.java)
+                    if (githubUsername != null) {
                         getUser(githubUsername)
-                    }else{
+                    } else {
                         Toast.makeText(activity, "Nama tidak ditemukan", Toast.LENGTH_SHORT).show()
                     }
-                } override fun onCancelled(databaseError: DatabaseError){
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
                     Toast.makeText(activity, "eror database", Toast.LENGTH_SHORT).show()
                 }
             })
@@ -69,6 +72,7 @@ class Profile : Fragment() {
 
             val firstChar = username?.take(1)
 
+            // Lakukan sesuatu dengan data pengguna, seperti menampilkannya di UI
         }
 
         // Mengatur listener untuk tombol logout
@@ -85,7 +89,8 @@ class Profile : Fragment() {
         }
         return root
     }
-    private fun getUser(usergit : String){
+
+    private fun getUser(usergit: String) {
         val client = ApiClient.githubService.getDetailUserGithub(usergit)
         client.enqueue(object : Callback<ResponseDetailUser> {
             override fun onResponse(call: Call<ResponseDetailUser>, response: Response<ResponseDetailUser>) {
@@ -93,7 +98,7 @@ class Profile : Fragment() {
                     val dataArray = response.body()
                     if (dataArray != null) {
                         binding.apply {
-                            profileImage.load(dataArray.avatar_url){
+                            profileImage.load(dataArray.avatar_url) {
                                 transformations(CircleCropTransformation())
                             }
                             profileRealname.text = dataArray.name
