@@ -37,11 +37,11 @@ class Profile : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val database = FirebaseDatabase.getInstance()
-        val reference = database.getReference("users")
+        val reference = database.getReference("Users")
         val preferencesDataStore = PreferencesDataStore(requireContext())
         val dataID = preferencesDataStore.getValue2()
         if(dataID != null){
-            val githubUsernameReference = reference.child(dataID).child("github_username")
+            val githubUsernameReference = reference.child(dataID).child("usernameGithub")
             githubUsernameReference.addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onDataChange(datasnapshot: DataSnapshot) {
                    val githubUsername = datasnapshot.getValue(String::class.java)
