@@ -32,34 +32,36 @@ class Home : Fragment() {
 
         // Set up RecyclerView
         adapter = UserAdapter(mutableListOf()) { user ->
-            // Menginisialisasi DetailFragment saat item daftar pengguna diklik
-            // Menginisialisasi DetailFragment saat item daftar pengguna diklik
+            // Membuat instance DetailFragment saat item daftar pengguna diklik
             val detailFragment = Detaill()
             val bundle = Bundle()
             bundle.putParcelable("item", user)
             detailFragment.arguments = bundle
 
-
-            val transaction = parentFragmentManager.beginTransaction() // Menggunakan parentFragmentManager di dalam Fragment
-            transaction.replace(R.id.frame_layout, detailFragment) // Ganti R.id.frame_layout dengan ID wadah fragmen Anda
-            transaction.addToBackStack(null) // Opsional, untuk menambahkan transaksi ke back stack
+            // Memulai transaksi fragment untuk menampilkan DetailFragment
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.frame_layout, detailFragment)
+            transaction.addToBackStack(null)
             transaction.commit()
         }
 
+// Mengatur LinearLayoutManager dan adapter untuk RecyclerView
         binding.recycleView.layoutManager = LinearLayoutManager(requireContext())
         binding.recycleView.setHasFixedSize(true)
         binding.recycleView.adapter = adapter
 
-        // Mengamati hasil pengambilan daftar pengguna dari ViewModel
+// Mengamati hasil pengambilan daftar pengguna dari ViewModel
         viewModel.resultUser.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Success<*> -> {
+                    // Jika pengambilan data berhasil, mengisi adapter dengan data pengguna
                     userList = result.data as MutableList<ResponseUserGithub.Item>
                     adapter.setData(userList)
                     setupSearchView()
                 }
 
                 is Result.Error -> {
+                    // Jika terjadi kesalahan, menampilkan pesan kesalahan
                     Toast.makeText(
                         requireContext(),
                         result.exception.message.toString(),
@@ -68,13 +70,13 @@ class Home : Fragment() {
                 }
 
                 is Result.Loading -> {
-                    // Menampilkan atau menyembunyikan progressBar
+                    // Menampilkan atau menyembunyikan progressBar sesuai dengan status loading
                     binding.progressBar.isVisible = result.isLoading
                 }
             }
         }
 
-        // Memanggil metode untuk mengambil daftar pengguna dari ViewModel
+// Memanggil metode untuk mengambil daftar pengguna dari ViewModel
         viewModel.getUser()
 
         return binding.root
@@ -96,3 +98,4 @@ class Home : Fragment() {
         })
     }
 }
+

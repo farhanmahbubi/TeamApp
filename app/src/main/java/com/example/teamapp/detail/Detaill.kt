@@ -35,8 +35,12 @@ class Detaill : Fragment() {
         // Inflasi tata letak fragment menggunakan data binding
         binding = FragmentHomeDetailBinding.inflate(inflater, container, false)
 
+// Mengambil objek Parcelable dengan kunci "item" dari argument Fragment
         val item = requireArguments().getParcelable<ResponseUserGithub.Item>("item")
+
+// Mengambil nama pengguna (username) dari objek Parcelable jika tersedia, atau mengaturnya menjadi string kosong jika tidak tersedia.
         val username = item?.login ?: ""
+
 
         // Mengamati hasil pengambilan detail pengguna dari ViewModel
         viewModel.resultDetaiUser.observe(viewLifecycleOwner) {
