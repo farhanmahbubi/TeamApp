@@ -49,8 +49,8 @@ class LoginActivity : ComponentActivity() {
 
             // Validasi email yang tidak valid
             if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                binding.edtPass.error = "Email Tidak Valid"
-                binding.edtPass.requestFocus()
+                binding.edtUser.error = "Email Tidak Valid"
+                binding.edtUser.requestFocus()
                 return@setOnClickListener
             }
 
@@ -76,7 +76,7 @@ class LoginActivity : ComponentActivity() {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 } else {
-                    Toast.makeText(this, "${it.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Email dan Password Salah", Toast.LENGTH_SHORT).show()
                 }
             }
     }
