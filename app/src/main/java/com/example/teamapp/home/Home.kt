@@ -33,10 +33,12 @@ class Home : Fragment() {
         // Set up RecyclerView
         adapter = UserAdapter(mutableListOf()) { user ->
             // Menginisialisasi DetailFragment saat item daftar pengguna diklik
+            // Menginisialisasi DetailFragment saat item daftar pengguna diklik
             val detailFragment = Detaill()
             val bundle = Bundle()
-            bundle.putString("username", user.login)
+            bundle.putParcelable("item", user)
             detailFragment.arguments = bundle
+
 
             val transaction = parentFragmentManager.beginTransaction() // Menggunakan parentFragmentManager di dalam Fragment
             transaction.replace(R.id.frame_layout, detailFragment) // Ganti R.id.frame_layout dengan ID wadah fragmen Anda

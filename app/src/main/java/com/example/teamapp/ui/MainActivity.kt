@@ -7,6 +7,7 @@ import com.example.teamapp.home.Home
 import com.example.teamapp.Profile
 import com.example.teamapp.R
 import com.example.teamapp.databinding.ActivityMainBinding
+import com.example.teamapp.favorit.Favorite
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

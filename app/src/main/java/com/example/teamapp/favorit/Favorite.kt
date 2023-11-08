@@ -1,4 +1,4 @@
-package com.example.teamapp.ui
+package com.example.teamapp.favorit
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

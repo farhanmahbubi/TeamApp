@@ -35,11 +35,8 @@ class Detaill : Fragment() {
         // Inflasi tata letak fragment menggunakan data binding
         binding = FragmentHomeDetailBinding.inflate(inflater, container, false)
 
-        // Mendapatkan username dari argument fragment
-        val username = requireArguments().getString("username") ?: ""
-
-        // Mendapatkan objek item dari argument fragment
-        val item = arguments?.getParcelable<ResponseUserGithub.Item>("item")
+        val item = requireArguments().getParcelable<ResponseUserGithub.Item>("item")
+        val username = item?.login ?: ""
 
         // Mengamati hasil pengambilan detail pengguna dari ViewModel
         viewModel.resultDetaiUser.observe(viewLifecycleOwner) {
@@ -78,16 +75,18 @@ class Detaill : Fragment() {
         viewModel.getDetailUser(username)
 
         // Mengamati hasil apakah pengguna sudah ada di daftar favorit
-        viewModel.resultSuksesFavorite.observe(viewLifecycleOwner) { isFavorite ->
-            if (isFavorite) {
+        viewModel.resultSuksesFavorite.observe(viewLifecycleOwner) { result ->
+            val isFavorite = result as? Boolean
+            if (isFavorite == true) {
                 // Mengubah warna ikon tombol favorit menjadi merah
                 binding.btnFavorite.changeIconColor(R.color.red)
             }
         }
 
         // Mengamati hasil apakah pengguna telah dihapus dari daftar favorit
-        viewModel.resultDeleteFavorite.observe(viewLifecycleOwner) { isDeleted ->
-            if (isDeleted) {
+        viewModel.resultDeleteFavorite.observe(viewLifecycleOwner) { result ->
+            val isDeleted = result as? Boolean
+            if (isDeleted == true) {
                 // Mengubah warna ikon tombol favorit menjadi putih
                 binding.btnFavorite.changeIconColor(R.color.white)
             }
@@ -102,8 +101,9 @@ class Detaill : Fragment() {
 
         // Mengecek apakah pengguna sudah ada di daftar favorit saat fragment dibuka
         item?.id?.let { itemId ->
-            viewModel.findFavorite(itemId) { isFavorite ->
-                if (isFavorite as Boolean) {
+            viewModel.findFavorite(itemId) { result ->
+                val isFavorite = result as? Boolean
+                if (isFavorite == true) {
                     // Mengubah warna ikon tombol favorit menjadi merah
                     binding.btnFavorite.changeIconColor(R.color.red)
                 } else {
@@ -116,8 +116,6 @@ class Detaill : Fragment() {
     }
 
     private fun FloatingActionButton.changeIconColor(@ColorRes color: Int) {
-        // Mengubah warna ikon tombol favorit sesuai dengan parameter warna
-        Log.d("ChangeIconColor", "Changing icon color to $color")
-        imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this.context, color))
+        imageTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), color))
     }
 }
