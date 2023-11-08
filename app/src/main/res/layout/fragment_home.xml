@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".home.Home">
 
     <com.google.android.material.card.MaterialCardView
@@ -12,22 +13,22 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:cardCornerRadius="20dp"
-        android:background="#D4F0F0"
-        app:cardElevation="12dp"
+        android:background="@color/white"
         app:cardUseCompatPadding="true"
+        app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:iconifiedByDefault="false"
-                android:background="@color/white"
-                app:queryBackground="@android:color/transparent"
-                app:queryHint="Cari Disini" />
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:iconifiedByDefault="false"
+            app:queryBackground="@android:color/white"
+            app:queryHint="Cari Disini" />
 
     </com.google.android.material.card.MaterialCardView>
 

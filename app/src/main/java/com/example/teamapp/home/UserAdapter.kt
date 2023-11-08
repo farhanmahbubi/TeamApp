@@ -40,7 +40,8 @@ class UserAdapter(
                 .circleCrop()
                 .into(binding.itemImage)
 
-            binding.itemContent.text = item.login
+            binding.itemContent.text = item.url
+            binding.itemContent2.text = item.login
         }
     }
 

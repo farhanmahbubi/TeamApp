@@ -51,6 +51,12 @@ class Detaill : Fragment() {
                         transformations(CircleCropTransformation())
                     }
                     binding.nama.text = user.name
+                    binding.location.text = user.location
+                    binding.company.text = user.company
+                    binding.follow.text = user.following.toString()
+                    binding.follower.text = user.followers.toString()
+                    binding.repo.text = user.public_repos.toString()
+                    binding.username.text = user.login
                 }
 
                 is Result.Error -> {

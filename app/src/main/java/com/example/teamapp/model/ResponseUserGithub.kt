@@ -20,5 +20,7 @@ data class ResponseUserGithub(
         val id: Int,
         @ColumnInfo(name = "login")
         val login: String,
+        @ColumnInfo(name = "url")
+        val url: String,
     ) : Parcelable
 }

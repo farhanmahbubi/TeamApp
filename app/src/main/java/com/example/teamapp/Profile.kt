@@ -103,6 +103,11 @@ class Profile : Fragment() {
                             }
                             profileRealname.text = dataArray.name
                             profileUsergithub.text = dataArray.login
+                            jmlrepos.text = dataArray.public_repos.toString()
+                            flwing.text = dataArray.following.toString()
+                            flwr.text = dataArray.followers.toString()
+                            tmptkerja.text = dataArray.company
+                            alamat.text = dataArray.location
                         }
                     }
                 }
